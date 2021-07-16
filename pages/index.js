@@ -116,12 +116,27 @@
               e.preventDefault();
               const dadosDoForm = new FormData(e.target);
               const comunidade = {
-                id: new Date().toISOString(),
                 title: dadosDoForm.get("title"),
-                image: dadosDoForm.get("image"),
+                imageUrl: dadosDoForm.get("image"),
+                creatorSlug: githubUser
               }
-              const comunidadesAtualizadas = [...comunidades, comunidade];
-              setComunidades(comunidadesAtualizadas)
+
+              fetch("/api/comunidade", {
+                method: "POST",
+                headers:{
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(comunidade)
+              })
+              .then(async (response) =>{
+                const dados = response.json();
+                console.log(dados.recordCreated);
+                const comunidade = dados.recordCreated;
+                const comunidadesAtualizadas = [...comunidades, comunidade];
+                setComunidades(comunidadesAtualizadas)
+              })
+
+
 
             }}>
               <div>
